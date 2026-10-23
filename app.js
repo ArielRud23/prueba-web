@@ -1,11 +1,22 @@
-// ===== TEXTOS DE LA APP =====
-// Todo lo que se lee en pantalla está aquí, en un solo lugar.
+// ===== TEXTOS E IMÁGENES DE LA APP =====
+// Todo lo que se ve en pantalla está aquí, en un solo lugar.
 // El día de la sorpresa solo cambias estos textos.
+//
+// Campos de cada pantalla:
+//   texto       -> texto principal
+//   secundario  -> texto pequeño (opcional)
+//   boton       -> texto del botón
+//   imagen      -> ruta de la ilustración (opcional)
+//   posicion    -> dónde va la imagen: "abajo-izq", "arriba-der", "abajo-der", "centro"
+//   animacion   -> "asomar" (sube desde abajo), "respirar" (vaivén), "flotar" (sube y baja)
 const pantallas = [
   {
     texto: "Hay cosas que merecen descubrirse sin prisa.",
     secundario: "Una pequeña experiencia.",
-    boton: "Comenzar →"
+    boton: "Comenzar →",
+    imagen: "img/flat-pikachu.png",
+    posicion: "abajo-izq",
+    animacion: "asomar"
   },
   {
     texto: "A veces, las cosas más especiales no son las que encontramos, sino las que alguien dedica tiempo a construir.",
@@ -13,7 +24,10 @@ const pantallas = [
   },
   {
     texto: "Porque cuando alguien significa mucho para nosotros, hasta los pequeños detalles pueden convertirse en algo extraordinario.",
-    boton: "Siguiente →"
+    boton: "Siguiente →",
+    imagen: "img/pikachu-smile.png",
+    posicion: "arriba-der",
+    animacion: "asomar"
   },
   {
     texto: "Y hay una forma muy particular de decirle a alguien que es importante: dedicarle algo que no existía antes.",
@@ -21,12 +35,18 @@ const pantallas = [
   },
   {
     texto: "¿Sabes qué tienen en común todas estas palabras?",
-    boton: "Quiero saber →"
+    boton: "Quiero saber →",
+    imagen: "img/pika-sleep.png",
+    posicion: "abajo-der",
+    animacion: "respirar"
   },
   {
     texto: "Esta es la última pantalla de la prueba.",
     secundario: "Pronto habrá más.",
-    boton: "Volver al inicio"
+    boton: "Volver al inicio",
+    imagen: "img/pika-hearth.png",
+    posicion: "abajo-izq",
+    animacion: "flotar"
   }
 ];
 
@@ -36,16 +56,16 @@ const btnNext = document.getElementById("btn-next");
 const btnBack = document.getElementById("btn-back");
 const counterEl = document.getElementById("counter");
 const dotsEl = document.getElementById("dots");
+const appEl = document.getElementById("app");
 
 // ===== ESTADO =====
-// Guarda en qué pantalla va la persona. Empieza en la 0 (la primera).
 let actual = 0;
 
 // ===== DIBUJAR UNA PANTALLA =====
 function mostrarPantalla(indice) {
   const p = pantallas[indice];
 
-  // Construimos el contenido de la pantalla
+  // Texto de la pantalla
   let html = '<p class="texto-principal">' + p.texto + '</p>';
   html += '<div class="separador"></div>';
   if (p.secundario) {
@@ -53,15 +73,28 @@ function mostrarPantalla(indice) {
   }
   screenEl.innerHTML = html;
 
-  // Reiniciamos la animación de entrada
+  // Reiniciamos la animación de entrada del texto
   screenEl.classList.remove("entrando");
   void screenEl.offsetWidth;
   screenEl.classList.add("entrando");
 
+  // Ilustración (si la pantalla tiene)
+  const viejo = document.getElementById("ilustracion");
+  if (viejo) viejo.remove();
+
+  if (p.imagen) {
+    const img = document.createElement("img");
+    img.id = "ilustracion";
+    img.src = p.imagen;
+    img.alt = "";
+    img.className = "ilustracion " + (p.posicion || "centro") + " " + (p.animacion || "");
+    appEl.appendChild(img);
+  }
+
   // Texto del botón
   btnNext.textContent = p.boton;
 
-  // Contador arriba (vacío en la primera pantalla)
+  // Contador y botón atrás
   if (indice === 0) {
     counterEl.textContent = "";
     btnBack.classList.add("oculto");
@@ -88,7 +121,7 @@ btnNext.addEventListener("click", function () {
   if (actual < pantallas.length - 1) {
     actual++;
   } else {
-    actual = 0; // en la última pantalla, vuelve al inicio
+    actual = 0;
   }
   mostrarPantalla(actual);
 });
@@ -101,7 +134,6 @@ btnBack.addEventListener("click", function () {
 });
 
 // ===== SERVICE WORKER =====
-// Permite que la app funcione sin conexión.
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js");

@@ -166,3 +166,88 @@ html, body {
   border-color: var(--salvia);
   transform: scale(1.2);
 }
+
+/* ===== ILUSTRACIONES ===== */
+#app {
+  position: relative;
+}
+
+.ilustracion {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  width: 150px;
+  height: auto;
+}
+
+#topbar, #screen, #bottom {
+  position: relative;
+  z-index: 1;
+}
+
+/* Posiciones */
+.ilustracion.abajo-izq {
+  left: 0;
+  bottom: 140px;
+}
+
+.ilustracion.abajo-der {
+  right: 0;
+  bottom: 130px;
+}
+
+.ilustracion.arriba-der {
+  right: 0;
+  top: 70px;
+  width: 140px;
+}
+
+.ilustracion.centro {
+  left: 50%;
+  bottom: 140px;
+  margin-left: -75px;
+}
+
+/* ===== ANIMACIÓN: ASOMAR (sube desde abajo, 900 ms) ===== */
+.ilustracion.asomar {
+  animation: asomar 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms both,
+             respirar 4000ms ease-in-out 1200ms infinite;
+}
+
+@keyframes asomar {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ANIMACIÓN: RESPIRAR (vaivén suave, 4 segundos) ===== */
+.ilustracion.respirar {
+  animation: entrar-suave 700ms ease 300ms both,
+             respirar 4000ms ease-in-out 1000ms infinite;
+}
+
+@keyframes respirar {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-4px) scale(1.02); }
+}
+
+@keyframes entrar-suave {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ===== ANIMACIÓN: FLOTAR (sube y baja, 3 segundos) ===== */
+.ilustracion.flotar {
+  animation: entrar-suave 700ms ease 300ms both,
+             flotar 3000ms ease-in-out 1000ms infinite;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-10px) rotate(2deg); }
+}
