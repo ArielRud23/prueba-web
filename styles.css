@@ -176,7 +176,7 @@ html, body {
   position: absolute;
   pointer-events: none;
   z-index: 0;
-  width: 150px;
+  width: 300px;
   height: auto;
 }
 
@@ -188,7 +188,7 @@ html, body {
 /* Posiciones */
 .ilustracion.abajo-izq {
   left: 0;
-  bottom: 140px;
+  bottom: 280px;
 }
 
 .ilustracion.abajo-der {
