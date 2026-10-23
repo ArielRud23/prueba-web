@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Proyecto</title>
 
-  <!-- Configuración para que funcione como app en iPhone -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Proyecto">
-  <meta name="theme-color" content="#7D8B76">
+  <meta name="theme-color" content="#7D877A">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
@@ -17,18 +16,25 @@
 </head>
 <body>
 
+  <!-- ===== ESCENA DE BIENVENIDA ===== -->
+  <div id="bienvenida">
+    <div id="escena">
+      <img id="pika-escena" src="img/pika-walk.png" alt="">
+      <div id="globo">¿Eres tú?</div>
+    </div>
+    <button id="btn-si">Sí</button>
+  </div>
+
+  <!-- ===== APP PRINCIPAL ===== -->
   <div id="app">
 
-    <!-- Barra superior: botón atrás y contador de progreso -->
     <header id="topbar">
       <button id="btn-back" aria-label="Atrás">‹</button>
       <span id="counter"></span>
     </header>
 
-    <!-- Aquí app.js dibuja cada pantalla -->
     <main id="screen"></main>
 
-    <!-- Zona inferior: botón principal y puntitos -->
     <footer id="bottom">
       <button id="btn-next">Comenzar →</button>
       <div id="dots"></div>
