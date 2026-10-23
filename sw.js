@@ -10,7 +10,16 @@ const ARCHIVOS = [
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./manifest.json"
+  "./manifest.json",
+  "./img/flat-pikachu.png",
+  "./img/pikachu-smile.png",
+  "./img/pika-sleep.png",
+  "./img/pika-hearth.png",
+  "./img/pika-walk.png",
+  "./img/pika-walk-swap.png",
+  "./img/min-poke.png",
+  "./img/pokeball.png",
+  "./img/sheet.png"
 ];
 
 // ===== INSTALACIÓN =====

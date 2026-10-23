@@ -142,3 +142,55 @@ if ("serviceWorker" in navigator) {
 
 // ===== ARRANQUE =====
 mostrarPantalla(actual);
+
+// ===== ESCENA DE BIENVENIDA =====
+// Texto de la pregunta. El día de la sorpresa cambias solo esta línea.
+const PREGUNTA = "¿Eres tú?";
+
+const bienvenidaEl = document.getElementById("bienvenida");
+const pikaEscena = document.getElementById("pika-escena");
+const globoEl = document.getElementById("globo");
+const btnSi = document.getElementById("btn-si");
+
+globoEl.textContent = PREGUNTA;
+
+// Los dos fotogramas del caminar
+const fotogramas = ["img/pika-walk.png", "img/pika-walk-swap.png"];
+let fotogramaActual = 0;
+
+// Cambia de fotograma cada 280 milisegundos para simular los pasos
+const intervaloPasos = setInterval(function () {
+  fotogramaActual = (fotogramaActual + 1) % fotogramas.length;
+  pikaEscena.src = fotogramas[fotogramaActual];
+}, 280);
+
+// Arranca a caminar medio segundo después de abrir
+setTimeout(function () {
+  pikaEscena.classList.add("caminando");
+}, 500);
+
+// A los 4.5 segundos llega al centro: se detiene y voltea de frente
+setTimeout(function () {
+  clearInterval(intervaloPasos);
+  pikaEscena.classList.remove("caminando");
+  pikaEscena.src = "img/flat-pikachu.png";
+  pikaEscena.classList.add("volteando");
+}, 4500);
+
+// A los 5.2 segundos aparece el globo con la pregunta
+setTimeout(function () {
+  globoEl.classList.add("visible");
+}, 5200);
+
+// A los 6 segundos aparece el botón Sí
+setTimeout(function () {
+  btnSi.classList.add("visible");
+}, 6000);
+
+// Al tocar Sí, la bienvenida se desvanece y queda la app
+btnSi.addEventListener("click", function () {
+  bienvenidaEl.classList.add("saliendo");
+  setTimeout(function () {
+    bienvenidaEl.classList.add("oculta");
+  }, 700);
+});
