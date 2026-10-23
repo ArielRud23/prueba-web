@@ -1,0 +1,168 @@
+/* ===== Paleta de colores (variables) ===== */
+:root {
+  --crema: #F4EDE2;
+--crema-claro: #F7F0E5;
+--salvia: #7D877A;
+--salvia-oscuro: #6A7567;
+--texto: #4E4D47;
+--texto-suave: #8B8A82;
+--linea: #B3B1A7;
+--amarillo: #FDDB8D;
+--mejilla: #ED936A;
+
+--duracion-pantalla: 600ms;
+--duracion-boton: 200ms;
+}
+
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  background: var(--crema);
+  color: var(--texto);
+  font-family: Georgia, "Times New Roman", serif;
+  overflow: hidden;
+}
+
+/* ===== Contenedor general ===== */
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+  background: linear-gradient(180deg, var(--crema-claro), var(--crema));
+}
+
+/* ===== Barra superior ===== */
+#topbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#btn-back {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: var(--texto-suave);
+  padding: 8px 12px;
+  transition: opacity var(--duracion-boton);
+}
+
+#btn-back.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#counter {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--texto-suave);
+}
+
+/* ===== Zona de pantalla ===== */
+#screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 8px;
+}
+
+.texto-principal {
+  font-size: 24px;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+.texto-secundario {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--texto-suave);
+  margin-top: 24px;
+}
+.separador {
+  width: 40px;
+  height: 1px;
+  background: var(--linea);
+  margin: 28px auto;
+}
+
+/* ===== Animación de entrada de cada pantalla ===== */
+.entrando > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: aparecer var(--duracion-pantalla) ease forwards;
+}
+
+.entrando > *:nth-child(2) { animation-delay: 150ms; }
+.entrando > *:nth-child(3) { animation-delay: 300ms; }
+.entrando > *:nth-child(4) { animation-delay: 450ms; }
+
+@keyframes aparecer {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Zona inferior ===== */
+#bottom {
+  padding: 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#btn-next {
+  width: 100%;
+  max-width: 280px;
+  padding: 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--salvia);
+  color: var(--crema-claro);
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(125, 139, 118, 0.3);
+  transition: transform var(--duracion-boton), background var(--duracion-boton);
+}
+
+#btn-next:active {
+  transform: scale(0.96);
+  background: var(--salvia-oscuro);
+}
+
+/* ===== Puntitos de progreso ===== */
+#dots {
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--texto-suave);
+  transition: background 300ms, transform 300ms;
+}
+
+.dot.activo {
+  background: var(--salvia);
+  border-color: var(--salvia);
+  transform: scale(1.2);
+}
