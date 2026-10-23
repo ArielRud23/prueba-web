@@ -158,34 +158,46 @@ globoEl.textContent = PREGUNTA;
 const fotogramas = ["img/pika-walk.png", "img/pika-walk-swap.png"];
 let fotogramaActual = 0;
 
-// Cambia de fotograma cada 280 milisegundos para simular los pasos
+// Cambia de fotograma cada 380 milisegundos para simular pasos más tranquilos
 const intervaloPasos = setInterval(function () {
   fotogramaActual = (fotogramaActual + 1) % fotogramas.length;
   pikaEscena.src = fotogramas[fotogramaActual];
-}, 280);
+}, 380);
 
-// Arranca a caminar medio segundo después de abrir
+// 0.5 s: entra por la derecha y empieza a caminar
 setTimeout(function () {
   pikaEscena.classList.add("caminando");
 }, 500);
 
-// A los 4.5 segundos llega al centro: se detiene y voltea de frente
+// 6.5 s: llega al centro y se detiene (pose de caminar, sin mover las patas)
 setTimeout(function () {
   clearInterval(intervaloPasos);
   pikaEscena.classList.remove("caminando");
-  pikaEscena.src = "img/flat-pikachu.png";
-  pikaEscena.classList.add("volteando");
-}, 4500);
+  pikaEscena.classList.add("quieto");
+  pikaEscena.src = "img/pika-walk.png";
+}, 6500);
 
-// A los 5.2 segundos aparece el globo con la pregunta
+// 7.7 s: voltea la cabeza hacia la pantalla
+setTimeout(function () {
+  pikaEscena.src = "img/pika-walk-head.png";
+}, 7700);
+
+// 9 s: se levanta de pie, de frente, con un saltito de sorpresa
+setTimeout(function () {
+  pikaEscena.classList.remove("quieto");
+  pikaEscena.src = "img/flat-pikachu.png";
+  pikaEscena.classList.add("levantado");
+}, 9000);
+
+// 9.8 s: aparece el globo con la pregunta
 setTimeout(function () {
   globoEl.classList.add("visible");
-}, 5200);
+}, 9800);
 
-// A los 6 segundos aparece el botón Sí
+// 10.6 s: aparece el botón Sí
 setTimeout(function () {
   btnSi.classList.add("visible");
-}, 6000);
+}, 10600);
 
 // Al tocar Sí, la bienvenida se desvanece y queda la app
 btnSi.addEventListener("click", function () {

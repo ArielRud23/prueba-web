@@ -281,37 +281,41 @@ html, body {
   height: 260px;
 }
 
+/* Pikachu empieza fuera de la pantalla, a la derecha */
 #pika-escena {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 200px;
   height: auto;
-  transform: translateX(-220px);
+  transform: translateX(100vw);
 }
 
-/* Cruza la pantalla y se detiene en el centro: 4 segundos */
+/* Camina de derecha a izquierda hasta el centro: 6 segundos */
 #pika-escena.caminando {
-  animation: cruzar 4000ms linear forwards;
+  animation: cruzar 6000ms linear forwards;
 }
 
 @keyframes cruzar {
-  from { transform: translateX(-220px); }
+  from { transform: translateX(100vw); }
   to   { transform: translateX(calc(50vw - 100px)); }
 }
 
-/* Cuando se detiene y voltea al frente: pequeño rebote de sorpresa */
-#pika-escena.volteando {
-  left: 50%;
-  margin-left: -100px;
-  transform: none;
+/* Se queda quieto en el centro */
+#pika-escena.quieto {
+  transform: translateX(calc(50vw - 100px));
+}
+
+/* Al levantarse de pie: saltito de sorpresa, medio segundo */
+#pika-escena.levantado {
+  transform: translateX(calc(50vw - 100px));
   animation: sorpresa 500ms ease-out;
 }
 
 @keyframes sorpresa {
-  0%   { transform: translateY(0) scale(1); }
-  40%  { transform: translateY(-14px) scale(1.06); }
-  100% { transform: translateY(0) scale(1); }
+  0%   { transform: translateX(calc(50vw - 100px)) translateY(0) scale(1); }
+  40%  { transform: translateX(calc(50vw - 100px)) translateY(-14px) scale(1.06); }
+  100% { transform: translateX(calc(50vw - 100px)) translateY(0) scale(1); }
 }
 
 /* Globo de diálogo */
