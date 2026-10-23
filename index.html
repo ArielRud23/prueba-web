@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Proyecto</title>
+
+  <!-- Configuración para que funcione como app en iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Proyecto">
+  <meta name="theme-color" content="#7D8B76">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- Barra superior: botón atrás y contador de progreso -->
+    <header id="topbar">
+      <button id="btn-back" aria-label="Atrás">‹</button>
+      <span id="counter"></span>
+    </header>
+
+    <!-- Aquí app.js dibuja cada pantalla -->
+    <main id="screen"></main>
+
+    <!-- Zona inferior: botón principal y puntitos -->
+    <footer id="bottom">
+      <button id="btn-next">Comenzar →</button>
+      <div id="dots"></div>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
