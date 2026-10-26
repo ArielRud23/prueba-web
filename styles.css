@@ -187,8 +187,8 @@ html, body {
 
 /* Posiciones */
 .ilustracion.abajo-izq {
-  left: -10px;
-  bottom: 100px;
+  left: 0;
+  bottom: 130px;
 }
 
 .ilustracion.abajo-der {
@@ -243,7 +243,7 @@ html, body {
 
 /* ===== ANIMACIÓN: FLOTAR (sube y baja, 3 segundos) ===== */
 .ilustracion.flotar {
-  animation: entrar-suave 700ms ease 300ms both,
+  animation: entrar-suave 700ms ease 300ms both,ES
              flotar 3000ms ease-in-out 1000ms infinite;
 }
 
@@ -287,7 +287,7 @@ html, body {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 160px;
+  width: 126px;
   height: auto;
 }
 
@@ -301,7 +301,7 @@ html, body {
 /* Naruto: empieza fuera, a la izquierda, y termina a la izquierda del centro */
 #naruto-escena {
   --x0: -200px;
-  --x: calc(50vw - 166px);
+  --x: calc(50vw - 126px);
   transform: translateX(var(--x0));
 }
 

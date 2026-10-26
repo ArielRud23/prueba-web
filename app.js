@@ -16,7 +16,10 @@ const pantallas = [
     boton: "Comenzar →",
     imagen: "img/flat-pikachu.png",
     posicion: "abajo-izq",
-    animacion: "asomar"
+    animacion: "asomar",
+    imagen2: "img/sasuke.png",
+    posicion2: "abajo-der",
+    animacion2: "asomar"
   },
   {
     texto: "A veces, las cosas más especiales no son las que encontramos, sino las que alguien dedica tiempo a construir.",
@@ -62,6 +65,15 @@ const appEl = document.getElementById("app");
 let actual = 0;
 
 // ===== DIBUJAR UNA PANTALLA =====
+// ===== CREAR UNA ILUSTRACIÓN =====
+function agregarIlustracion(ruta, posicion, animacion) {
+  const img = document.createElement("img");
+  img.src = ruta;
+  img.alt = "";
+  img.className = "ilustracion " + (posicion || "centro") + " " + (animacion || "");
+  appEl.appendChild(img);
+}
+
 function mostrarPantalla(indice) {
   const p = pantallas[indice];
 
@@ -78,17 +90,16 @@ function mostrarPantalla(indice) {
   void screenEl.offsetWidth;
   screenEl.classList.add("entrando");
 
-  // Ilustración (si la pantalla tiene)
-  const viejo = document.getElementById("ilustracion");
-  if (viejo) viejo.remove();
+    // Ilustraciones (si la pantalla tiene). Borramos las anteriores.
+  document.querySelectorAll(".ilustracion").forEach(function (el) {
+    el.remove();
+  });
 
   if (p.imagen) {
-    const img = document.createElement("img");
-    img.id = "ilustracion";
-    img.src = p.imagen;
-    img.alt = "";
-    img.className = "ilustracion " + (p.posicion || "centro") + " " + (p.animacion || "");
-    appEl.appendChild(img);
+    agregarIlustracion(p.imagen, p.posicion, p.animacion);
+  }
+  if (p.imagen2) {
+    agregarIlustracion(p.imagen2, p.posicion2, p.animacion2);
   }
 
   // Texto del botón
