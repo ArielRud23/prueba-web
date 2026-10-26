@@ -189,11 +189,13 @@ html, body {
 .ilustracion.abajo-izq {
   left: 0;
   bottom: 130px;
+  width: 120px;
 }
 
 .ilustracion.abajo-der {
   right: 0;
   bottom: 130px;
+  width: 100px;
 }
 
 .ilustracion.arriba-der {
