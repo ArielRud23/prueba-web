@@ -364,3 +364,43 @@ html, body {
 #btn-si:active {
   transform: scale(0.96);
 }
+
+/* ===== AJUSTES DE POSICIÓN ===== */
+
+/* Pikachu centrado, pegado encima del botón (pantalla final) */
+.ilustracion.sobre-boton {
+  left: 50%;
+  bottom: 124px;
+  width: 190px;
+  margin-left: -60px;
+}
+
+/* Pikachu a la derecha, entre el texto y el botón (pantalla 2) */
+.ilustracion.medio-der {
+  right: -14px;
+  bottom: 190px;
+  width: 200px;
+}
+
+/* Asomar desde el botón: sube un poco y luego flota suave.
+   No usa translateX, porque el centrado ya lo hace margin-left. */
+.ilustracion.asomar-centro {
+  animation: asomar-centro 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms both,
+             flotar-centro 3000ms ease-in-out 1200ms infinite;
+}
+
+@keyframes asomar-centro {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes flotar-centro {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}

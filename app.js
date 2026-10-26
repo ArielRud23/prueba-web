@@ -26,7 +26,7 @@ const pantallas = [
     texto: "Porque cuando alguien significa mucho para nosotros, hasta los pequeños detalles pueden convertirse en algo extraordinario.",
     boton: "Siguiente →",
     imagen: "img/pikachu-smile.png",
-    posicion: "arriba-der",
+    posicion: "medio-der",
     animacion: "asomar"
   },
   {
@@ -45,8 +45,8 @@ const pantallas = [
     secundario: "Pronto habrá más.",
     boton: "Volver al inicio",
     imagen: "img/pika-hearth.png",
-    posicion: "abajo-izq",
-    animacion: "flotar"
+    posicion: "sobre-boton",
+    animacion: "asomar-centro"
   }
 ];
 
