@@ -147,46 +147,65 @@ mostrarPantalla(actual);
 // Texto de la pregunta. El día de la sorpresa cambias solo esta línea.
 const PREGUNTA = "¿Eres tú?";
 
+// Imágenes de Pikachu
+const PIKA_PASO_1 = "img/pika-walk.png";
+const PIKA_PASO_2 = "img/pika-walk-swap.png";
+const PIKA_CABEZA = "img/pika-walk-head.png";
+const PIKA_PARADO = "img/flat-pikachu.png";
+
+// Imágenes de Naruto
+const NARU_PASO_1 = "img/naruto-walk.png";
+const NARU_PASO_2 = "img/naruto-walk-swap.png";
+const NARU_CABEZA = "img/naruto-walk-head.png";
+const NARU_PARADO = "img/naruto-finger.png";
+
 const bienvenidaEl = document.getElementById("bienvenida");
 const pikaEscena = document.getElementById("pika-escena");
+const narutoEscena = document.getElementById("naruto-escena");
 const globoEl = document.getElementById("globo");
 const btnSi = document.getElementById("btn-si");
 
 globoEl.textContent = PREGUNTA;
 
-// Los dos fotogramas del caminar
-const fotogramas = ["img/pika-walk.png", "img/pika-walk-swap.png"];
-let fotogramaActual = 0;
-
-// Cambia de fotograma cada 380 milisegundos para simular pasos más tranquilos
+// Los dos caminan con el mismo ritmo: cambian de pie cada 380 ms
+let pasoActual = 0;
 const intervaloPasos = setInterval(function () {
-  fotogramaActual = (fotogramaActual + 1) % fotogramas.length;
-  pikaEscena.src = fotogramas[fotogramaActual];
+  pasoActual = (pasoActual + 1) % 2;
+  pikaEscena.src = pasoActual === 0 ? PIKA_PASO_1 : PIKA_PASO_2;
+  narutoEscena.src = pasoActual === 0 ? NARU_PASO_1 : NARU_PASO_2;
 }, 380);
 
-// 0.5 s: entra por la derecha y empieza a caminar
+// 0.5 s: entran los dos y empiezan a caminar
 setTimeout(function () {
   pikaEscena.classList.add("caminando");
+  narutoEscena.classList.add("caminando");
 }, 500);
 
-// 6.5 s: llega al centro y se detiene (pose de caminar, sin mover las patas)
+// 6.5 s: llegan a su lugar y se detienen
 setTimeout(function () {
   clearInterval(intervaloPasos);
   pikaEscena.classList.remove("caminando");
+  narutoEscena.classList.remove("caminando");
   pikaEscena.classList.add("quieto");
-  pikaEscena.src = "img/pika-walk.png";
+  narutoEscena.classList.add("quieto");
+  pikaEscena.src = PIKA_PASO_1;
+  narutoEscena.src = NARU_PASO_1;
 }, 6500);
 
-// 7.7 s: voltea la cabeza hacia la pantalla
+// 7.7 s: voltean la cabeza hacia la pantalla, los dos a la vez
 setTimeout(function () {
-  pikaEscena.src = "img/pika-walk-head.png";
+  pikaEscena.src = PIKA_CABEZA;
+  narutoEscena.src = NARU_CABEZA;
 }, 7700);
 
-// 9 s: se levanta de pie, de frente, con un saltito de sorpresa
+// 9 s: se paran de frente con un saltito de sorpresa
 setTimeout(function () {
   pikaEscena.classList.remove("quieto");
-  pikaEscena.src = "img/flat-pikachu.png";
+  narutoEscena.classList.remove("quieto");
+  pikaEscena.src = PIKA_PARADO;
+  narutoEscena.src = NARU_PARADO;
   pikaEscena.classList.add("levantado");
+  narutoEscena.classList.add("levantado");
 }, 9000);
 
 // 9.8 s: aparece el globo con la pregunta

@@ -281,44 +281,61 @@ html, body {
   height: 260px;
 }
 
-/* Pikachu empieza fuera de la pantalla, a la derecha */
-#pika-escena {
+/* Los dos personajes comparten tamaño y base */
+#pika-escena,
+#naruto-escena {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 200px;
+  width: 160px;
   height: auto;
-  transform: translateX(100vw);
 }
 
-/* Camina de derecha a izquierda hasta el centro: 6 segundos */
-#pika-escena.caminando {
+/* Pikachu: empieza fuera, a la derecha, y termina a la derecha del centro */
+#pika-escena {
+  --x0: 100vw;
+  --x: calc(50vw + 6px);
+  transform: translateX(var(--x0));
+}
+
+/* Naruto: empieza fuera, a la izquierda, y termina a la izquierda del centro */
+#naruto-escena {
+  --x0: -200px;
+  --x: calc(50vw - 166px);
+  transform: translateX(var(--x0));
+}
+
+/* Caminan 6 segundos hasta su lugar */
+#pika-escena.caminando,
+#naruto-escena.caminando {
   animation: cruzar 6000ms linear forwards;
 }
 
 @keyframes cruzar {
-  from { transform: translateX(100vw); }
-  to   { transform: translateX(calc(50vw - 100px)); }
+  from { transform: translateX(var(--x0)); }
+  to   { transform: translateX(var(--x)); }
 }
 
-/* Se queda quieto en el centro */
-#pika-escena.quieto {
-  transform: translateX(calc(50vw - 100px));
+/* Se quedan quietos en su lugar */
+#pika-escena.quieto,
+#naruto-escena.quieto {
+  transform: translateX(var(--x));
 }
 
-/* Al levantarse de pie: saltito de sorpresa, medio segundo */
-#pika-escena.levantado {
-  transform: translateX(calc(50vw - 100px));
+/* Al pararse de frente: saltito de sorpresa, medio segundo */
+#pika-escena.levantado,
+#naruto-escena.levantado {
+  transform: translateX(var(--x));
   animation: sorpresa 500ms ease-out;
 }
 
 @keyframes sorpresa {
-  0%   { transform: translateX(calc(50vw - 100px)) translateY(0) scale(1); }
-  40%  { transform: translateX(calc(50vw - 100px)) translateY(-14px) scale(1.06); }
-  100% { transform: translateX(calc(50vw - 100px)) translateY(0) scale(1); }
+  0%   { transform: translateX(var(--x)) translateY(0) scale(1); }
+  40%  { transform: translateX(var(--x)) translateY(-14px) scale(1.06); }
+  100% { transform: translateX(var(--x)) translateY(0) scale(1); }
 }
 
-/* Globo de diálogo */
+/* Globo de diálogo, centrado entre los dos */
 #globo {
   position: absolute;
   top: 0;
@@ -370,16 +387,16 @@ html, body {
 /* Pikachu centrado, pegado encima del botón (pantalla final) */
 .ilustracion.sobre-boton {
   left: 50%;
-  bottom: 124px;
+  bottom: 95px;
   width: 190px;
-  margin-left: -60px;
+  margin-left: -78px;
 }
 
 /* Pikachu a la derecha, entre el texto y el botón (pantalla 2) */
 .ilustracion.medio-der {
   right: -14px;
-  bottom: 190px;
-  width: 200px;
+  bottom: 160px;
+  width: 150px;
 }
 
 /* Asomar desde el botón: sube un poco y luego flota suave.
