@@ -1,7 +1,7 @@
 // ===== VERSIÓN DE LA MEMORIA =====
 // Cada vez que cambies cualquier archivo de la app, sube este número
 // (v1, v2, v3...) para que el iPhone descargue la versión nueva.
-const VERSION = "v16";
+const VERSION = "v18";
 const NOMBRE_CACHE = "proyecto-" + VERSION;
 
 // ===== ARCHIVOS QUE SE GUARDAN EN EL TELÉFONO =====

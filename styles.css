@@ -460,7 +460,7 @@ bottom: 110px;
 
 /* Solo en la pantalla larga: Kakashi y Sakura más chicos */
 #app:has(#screen.pantalla-larga) .ilustracion.abajo-izq,
-#app:has(#screen.pantalla-larga) .ilustracion.abajo-der {
+#app:has(#screen.pantalla-larga) .ilustracion.abajo-der { 
 width: 90px;
 }
 
@@ -491,7 +491,6 @@ width: 90px;
 #screen.pantalla-larga {
   justify-content: flex-start;
   padding-top: 20px;
-  padding-bottom: 230px;
 }
 
 #screen.pantalla-larga .texto-principal {
@@ -506,4 +505,23 @@ width: 90px;
 #screen.pantalla-larga .texto-secundario {
   font-size: 17px;
   line-height: 1.4;
+}
+
+/* ===== PANTALLA LARGA: botón 40px arriba, personajes 40px abajo ===== */
+
+/* El botón sube */
+#app:has(#screen.pantalla-larga) #bottom {
+  margin-bottom: 40px;
+}
+
+/* Kakashi y Sakura bajan 40px: 110 menos 40 */
+#app:has(#screen.pantalla-larga) .ilustracion.abajo-izq,
+#app:has(#screen.pantalla-larga) .ilustracion.abajo-der {
+  width: 90px;
+  bottom: 70px;
+}
+
+/* Naruto jutsu baja 40px junto con el botón */
+#app:has(#screen.pantalla-larga) .ilustracion.abajo-centro {
+  bottom: 70px;
 }
