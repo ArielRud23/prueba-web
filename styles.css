@@ -289,8 +289,25 @@ html, body {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 126px;
   height: auto;
+}
+
+/* Anchos al caminar y al estar quietos con la cabeza volteada */
+#pika-escena {
+  width: 240px;
+}
+
+#naruto-escena {
+  width: 120px;
+}
+
+/* Anchos al pararse de frente (los que ya se ven bien) */
+#pika-escena.levantado {
+  width: 140px;
+}
+
+#naruto-escena.levantado {
+  width: 140px;
 }
 
 /* Pikachu: empieza fuera, a la derecha, y termina a la derecha del centro */
@@ -340,7 +357,7 @@ html, body {
 /* Globo de diálogo, centrado entre los dos */
 #globo {
   position: absolute;
-  top: 0;
+  top: -20%;
   left: 50%;
   transform: translateX(-50%) scale(0.8);
   opacity: 0;
@@ -422,4 +439,42 @@ html, body {
 @keyframes flotar-centro {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
+}
+
+/* ===== PANTALLA 2: TRES PERSONAJES ===== */
+
+/* Posición del centro, con el mismo bottom que los laterales */
+.ilustracion.abajo-centro {
+  left: 50%;
+  bottom: 80px;
+  width: 130px;
+  margin-left: -65px;
+}
+
+/* Tamaños de los laterales, igualados a Pikachu y Sasuke */
+.ilustracion.abajo-izq,
+.ilustracion.abajo-der {
+  width: 120px;
+  bottom: 110px;
+}
+
+/* Efecto espejo: voltea a Kakashi hacia la derecha */
+.ilustracion.espejo {
+  transform: scaleX(-1);
+}
+
+/* La animación de entrada de Kakashi debe conservar el volteo */
+.ilustracion.asomar.espejo {
+  animation: asomar-espejo 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms both;
+}
+
+@keyframes asomar-espejo {
+  from {
+    opacity: 0;
+    transform: scaleX(-1) translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(-1) translateY(0);
+  }
 }

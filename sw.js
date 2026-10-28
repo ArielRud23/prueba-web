@@ -1,7 +1,7 @@
 // ===== VERSIÓN DE LA MEMORIA =====
 // Cada vez que cambies cualquier archivo de la app, sube este número
 // (v1, v2, v3...) para que el iPhone descargue la versión nueva.
-const VERSION = "v13";
+const VERSION = "v14";
 const NOMBRE_CACHE = "proyecto-" + VERSION;
 
 // ===== ARCHIVOS QUE SE GUARDAN EN EL TELÉFONO =====
@@ -22,6 +22,9 @@ const ARCHIVOS = [
   "./img/sheet.png",
   "./img/pika-walk-head.png",
   "./img/sasuke.png",
+  "./img/kakashi.png",
+  "./img/naruto-jutsu.png",
+  "./img/sakura-hand.png",
 ];
 
 // ===== INSTALACIÓN =====

@@ -11,8 +11,8 @@
 //   animacion   -> "asomar" (sube desde abajo), "respirar" (vaivén), "flotar" (sube y baja)
 const pantallas = [
   {
-    texto: "Hay cosas que merecen descubrirse sin prisa.",
-    secundario: "Una pequeña experiencia.",
+    texto: "A partir de ahora, nosotros vamos a acompañarte hasta el fin de este recorrido",
+    secundario: "¿Aceptas?",
     boton: "Comenzar →",
     imagen: "img/flat-pikachu.png",
     posicion: "abajo-izq",
@@ -22,8 +22,18 @@ const pantallas = [
     animacion2: "asomar"
   },
   {
-    texto: "A veces, las cosas más especiales no son las que encontramos, sino las que alguien dedica tiempo a construir.",
-    boton: "Siguiente →"
+    texto: "Hemos investigado un poco sobre ti y hemos descubierto que eres una persona muy especial... También sabemos que desde que tú eres pequeña, nos has acompañado durante todo este tiempo!",
+    secundario:"Es momento de devolverte el favor... así que, nosotros queremos acompañarte a ti en este bonito día.",
+    boton: "Siguiente →",
+    imagen: "img/kakashi.png",
+    posicion: "abajo-izq",
+    animacion: "asomar espejo",
+    imagen2: "img/naruto-jutsu.png",
+    posicion2: "abajo-centro",
+    animacion2: "asomar",
+    imagen3: "img/sakura-hand.png",
+    posicion3: "abajo-der",
+    animacion3: "asomar"
   },
   {
     texto: "Porque cuando alguien significa mucho para nosotros, hasta los pequeños detalles pueden convertirse en algo extraordinario.",
@@ -101,6 +111,9 @@ function mostrarPantalla(indice) {
   if (p.imagen2) {
     agregarIlustracion(p.imagen2, p.posicion2, p.animacion2);
   }
+  if (p.imagen3) {
+    agregarIlustracion(p.imagen3, p.posicion3, p.animacion3);
+  }
 
   // Texto del botón
   btnNext.textContent = p.boton;
@@ -156,7 +169,7 @@ mostrarPantalla(actual);
 
 // ===== ESCENA DE BIENVENIDA =====
 // Texto de la pregunta. El día de la sorpresa cambias solo esta línea.
-const PREGUNTA = "¿Eres tú?";
+const PREGUNTA = "¡Oye!, ¿tú eres Karina?";
 
 // Imágenes de Pikachu
 const PIKA_PASO_1 = "img/pika-walk.png";
