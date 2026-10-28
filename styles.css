@@ -511,7 +511,7 @@ width: 90px;
 
 /* El botón sube */
 #app:has(#screen.pantalla-larga) #bottom {
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
 /* Kakashi y Sakura bajan 40px: 110 menos 40 */
