@@ -454,9 +454,14 @@ html, body {
 /* Tamaños de los laterales, igualados a Pikachu y Sasuke */
 .ilustracion.abajo-izq,
 .ilustracion.abajo-der {
+width: 120px;
+bottom: 110px;
+}
+
+/* Solo en la pantalla larga: Kakashi y Sakura más chicos */
 #app:has(#screen.pantalla-larga) .ilustracion.abajo-izq,
 #app:has(#screen.pantalla-larga) .ilustracion.abajo-der {
-  width: 90px;
+width: 90px;
 }
 
 /* Efecto espejo: voltea a Kakashi hacia la derecha */
@@ -501,5 +506,4 @@ html, body {
 #screen.pantalla-larga .texto-secundario {
   font-size: 17px;
   line-height: 1.4;
-}
 }
