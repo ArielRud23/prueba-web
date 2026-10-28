@@ -43,6 +43,43 @@
 
   </div>
 
+  <!-- ===== PANTALLA DE REANUDAR ===== -->
+  <div id="reanudar" class="oculta">
+    <img class="reanudar-pika" src="img/flat-pikachu.png" alt="">
+    <img class="reanudar-naru" src="img/naruto-finger.png" alt="">
+    <div class="reanudar-globo">¡Volviste! ¿Seguimos donde nos quedamos?</div>
+    <button id="btn-seguir" class="reanudar-btn">Seguir →</button>
+    <button id="btn-reiniciar" class="reanudar-btn secundario">Empezar de nuevo</button>
+  </div>
+
+  <!-- ===== AVISO DE HORA ===== -->
+  <div id="aviso" class="oculta">
+    <img class="aviso-pika" src="img/flat-pikachu.png" alt="">
+    <img class="aviso-naru" src="img/naruto-finger.png" alt="">
+    <div id="aviso-texto" class="aviso-globo"></div>
+    <button id="btn-aviso" class="reanudar-btn">Entendido</button>
+  </div>
+
+  <!-- ===== PANTALLA DEL REGALO ===== -->
+  <div id="regalo-pantalla" class="oculta">
+    <p id="regalo-texto">Esta es la última misión.<br>Algo te espera aquí...</p>
+    <div id="regalo-escena">
+      <img id="regalo-grupo" src="img/circle-characters.png" alt="">
+      <img id="regalo-caja" src="img/gift.png" alt="">
+    </div>
+    <p id="regalo-pista">Toca el regalo</p>
+  </div>
+
+  <!-- ===== PANTALLA DE RASCA Y GANA ===== -->
+  <div id="rasca-pantalla" class="oculta">
+    <p id="rasca-titulo">Raspa para descubrir</p>
+    <div id="rasca-caja">
+      <div id="rasca-codigo">XXXX</div>
+      <canvas id="rasca-canvas"></canvas>
+    </div>
+    <p id="rasca-mensaje">Esto era lo que realmente te estábamos buscando.<br>Ven conmigo, que hay una última cosa que recoger.</p>
+  </div>
+  
   <script src="app.js"></script>
 </body>
 </html>

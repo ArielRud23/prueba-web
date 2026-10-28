@@ -245,7 +245,7 @@ html, body {
 
 /* ===== ANIMACIÓN: FLOTAR (sube y baja, 3 segundos) ===== */
 .ilustracion.flotar {
-  animation: entrar-suave 700ms ease 300ms both,ES
+  animation: entrar-suave 700ms ease 300ms both,
              flotar 3000ms ease-in-out 1000ms infinite;
 }
 
@@ -313,7 +313,7 @@ html, body {
 /* Pikachu: empieza fuera, a la derecha, y termina a la derecha del centro */
 #pika-escena {
   --x0: 100vw;
-  --x: calc(50vw + 6px);
+  --x: calc(50vw + -30px);
   transform: translateX(var(--x0));
 }
 
@@ -524,4 +524,279 @@ width: 90px;
 /* Naruto jutsu baja 40px junto con el botón */
 #app:has(#screen.pantalla-larga) .ilustracion.abajo-centro {
   bottom: 70px;
+}
+
+/* Naruto asomando por la izquierda, espejo de medio-der */
+.ilustracion.medio-izq {
+left: -14px;
+bottom: 150px;
+width: 120px;
+}
+
+/* ===================================================== */
+/* ===== CAPAS NUEVAS: reanudar, aviso, regalo, rasca ===== */
+/* ===================================================== */
+
+.oculta {
+  display: none !important;
+}
+
+/* ----- Reanudar y aviso de hora (comparten estilo) ----- */
+#reanudar,
+#aviso {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: linear-gradient(180deg, var(--crema-claro), var(--crema));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  animation: capa-entra 500ms ease both;
+}
+
+#reanudar.saliendo,
+#aviso.saliendo {
+  animation: capa-sale 500ms ease both;
+}
+
+#aviso {
+  z-index: 10000;
+}
+
+.reanudar-pika,
+.reanudar-naru,
+.aviso-pika,
+.aviso-naru {
+  position: absolute;
+  bottom: 18%;
+  width: 130px;
+  height: auto;
+}
+
+.reanudar-pika, .aviso-pika { right: 6%; }
+.reanudar-naru, .aviso-naru { left: 6%; }
+
+.reanudar-globo,
+.aviso-globo {
+  max-width: 280px;
+  text-align: center;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--texto);
+  margin-bottom: 150px;
+}
+
+.reanudar-btn {
+  width: 80%;
+  max-width: 280px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--salvia);
+  color: var(--crema-claro);
+  font-size: 16px;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(125, 139, 118, 0.3);
+  transition: transform 200ms;
+}
+
+.reanudar-btn:active {
+  transform: scale(0.96);
+}
+
+.reanudar-btn.secundario {
+  background: transparent;
+  color: var(--salvia);
+  box-shadow: none;
+  padding: 8px;
+  font-size: 15px;
+}
+
+/* Aviso final: tono más urgente */
+#aviso.urgente {
+  background: linear-gradient(180deg, #F9E3C9, #F1CFA9);
+}
+
+@keyframes capa-entra {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes capa-sale {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ----- Pantalla del regalo ----- */
+#regalo-pantalla {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: linear-gradient(180deg, var(--crema-claro), var(--crema));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 90px 24px 60px;
+  text-align: center;
+  animation: capa-entra 700ms ease both;
+}
+
+#regalo-texto {
+  font-size: 24px;
+  line-height: 1.5;
+  max-width: 300px;
+  color: var(--texto);
+}
+
+#regalo-escena {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  height: 300px;
+}
+
+#regalo-grupo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 300px;
+  margin-left: -150px;
+  height: auto;
+}
+
+/* El regalo está a sus pies, delante del grupo */
+#regalo-caja {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 110px;
+  margin-left: -55px;
+  height: auto;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: caja-late 1800ms ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(255, 224, 150, 0.9));
+}
+
+/* Latido y brillo: parece que algo quiere salir */
+@keyframes caja-late {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 8px rgba(255, 224, 150, 0.6));
+  }
+  25% { transform: scale(1.06) rotate(-3deg); }
+  50% {
+    transform: scale(1.1) rotate(0deg);
+    filter: drop-shadow(0 0 22px rgba(255, 215, 120, 1));
+  }
+  75% { transform: scale(1.06) rotate(3deg); }
+}
+
+/* Al tocarla: se sacude más fuerte antes de abrir */
+#regalo-caja.abriendo {
+  animation: caja-abre 900ms ease-in forwards;
+}
+
+@keyframes caja-abre {
+  0%   { transform: scale(1) rotate(0deg); }
+  20%  { transform: scale(1.1) rotate(-8deg); }
+  40%  { transform: scale(1.15) rotate(8deg); }
+  60%  { transform: scale(1.2) rotate(-8deg); }
+  100% {
+    transform: scale(1.5) rotate(0deg);
+    opacity: 0;
+    filter: drop-shadow(0 0 40px rgba(255, 240, 180, 1));
+  }
+}
+
+#regalo-pista {
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--texto-suave);
+  animation: pista-parpadea 2000ms ease-in-out infinite;
+}
+
+@keyframes pista-parpadea {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+/* ----- Pantalla de rasca y gana ----- */
+#rasca-pantalla {
+  position: fixed;
+  inset: 0;
+  z-index: 9100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px;
+  text-align: center;
+  /* Empieza crema; el color borgoña lo pone el código mientras se raspa */
+  background: #F4EDE2;
+  transition: background 120ms linear;
+  animation: capa-entra 700ms ease both;
+}
+
+#rasca-titulo {
+  font-size: 22px;
+  color: var(--texto);
+  transition: color 400ms;
+}
+
+#rasca-caja {
+  position: relative;
+  width: 260px;
+  height: 110px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+/* El código queda debajo de la capa gris */
+#rasca-codigo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FBF6EC;
+  color: #5A1F2B;
+  font-size: 34px;
+  font-weight: bold;
+  letter-spacing: 6px;
+}
+
+#rasca-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: pointer;
+}
+
+#rasca-mensaje {
+  font-size: 20px;
+  line-height: 1.5;
+  max-width: 300px;
+  color: #F4E4DA;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1000ms ease, transform 1000ms ease;
+}
+
+#rasca-mensaje.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Cuando el fondo ya es oscuro, el título se aclara */
+#rasca-pantalla.oscuro #rasca-titulo {
+  color: #F4E4DA;
 }

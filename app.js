@@ -37,11 +37,14 @@ const pantallas = [
     animacion3: "asomar"
   },
   {
-    texto: "Porque cuando alguien significa mucho para nosotros, hasta los pequeños detalles pueden convertirse en algo extraordinario.",
-    boton: "Siguiente →",
+    texto: "¿Que te parece si nos buscas... no sé, tal vez en un, Miniso? Y nos traes a la realidad para acompañarte más de cerca.",
+    boton: "¡Ya los encontramos! →",
     imagen: "img/pikachu-smile.png",
     posicion: "medio-der",
-    animacion: "asomar"
+    animacion: "asomar",
+    imagen2: "img/naruto-smile-left.png",
+    posicion2: "medio-izq",
+    animacion2: "asomar"
   },
   {
     texto: "Y hay una forma muy particular de decirle a alguien que es importante: dedicarle algo que no existía antes.",
@@ -60,7 +63,13 @@ const pantallas = [
     boton: "Volver al inicio",
     imagen: "img/pika-hearth.png",
     posicion: "sobre-boton",
-    animacion: "asomar-centro"
+    animacion: "asomar-centro",
+  },
+   {
+    texto: "Última misión.",
+    secundario: "Algo te espera.",
+    boton: "Continuar →",
+    esRegalo: true
   }
 ];
 
@@ -75,6 +84,314 @@ const appEl = document.getElementById("app");
 // ===== ESTADO =====
 let actual = 0;
 
+// =====================================================
+// ===== CONFIGURACIÓN FÁCIL (aquí cambias lo importante) =====
+// =====================================================
+
+// Pantalla del Miniso (cuenta desde 0). Si cambias el orden, cambia este número.
+const PANTALLA_MINISO = 2;
+
+// Código que se descubre al raspar. El día de la sorpresa ponlo aquí.
+const CODIGO_REGALO = "XXXX";
+
+// Color borgoña del iPhone (vino chocolate).
+const COLOR_BORGONA = [90, 31, 43];
+
+// Avisos de hora. Formato 24 horas: 20 y 20 son las 8:20 p. m.
+// Cada aviso sale una sola vez.
+const AVISOS = [
+  {
+    id: "aviso-1",
+    hora: 20,
+    minuto: 20,
+    urgente: false,
+    texto: "Hay una última misión pendiente... y el tiempo se acaba."
+  },
+  {
+    id: "aviso-2",
+    hora: 20,
+    minuto: 30,
+    urgente: true,
+    texto: "¡Ahora o nunca!"
+  }
+];
+
+// Clave con que se guarda el progreso en el teléfono.
+const CLAVE_PROGRESO = "progreso-karina";
+const CLAVE_AVISOS = "avisos-vistos";
+
+// ===== MEMORIA DEL PROGRESO =====
+function guardarProgreso(indice) {
+  try {
+    localStorage.setItem(CLAVE_PROGRESO, String(indice));
+  } catch (e) {}
+}
+
+function leerProgreso() {
+  try {
+    const valor = localStorage.getItem(CLAVE_PROGRESO);
+    if (valor === null) return null;
+    const n = parseInt(valor, 10);
+    if (isNaN(n) || n < 0 || n >= pantallas.length) return null;
+    return n;
+  } catch (e) {
+    return null;
+  }
+}
+
+function borrarProgreso() {
+  try {
+    localStorage.removeItem(CLAVE_PROGRESO);
+    localStorage.removeItem(CLAVE_AVISOS);
+  } catch (e) {}
+}
+
+// ===== HORA ACTUAL (con modo de prueba) =====
+// Para ensayar sin esperar, abre la app con ?hora=20:25 al final de la dirección.
+// Ejemplo: arielrud23.github.io/prueba-web/?hora=20:25
+function horaActual() {
+  const params = new URLSearchParams(window.location.search);
+  const simulada = params.get("hora");
+  if (simulada) {
+    const partes = simulada.split(":");
+    const h = parseInt(partes[0], 10);
+    const m = parseInt(partes[1] || "0", 10);
+    if (!isNaN(h) && !isNaN(m)) {
+      return { hora: h, minuto: m };
+    }
+  }
+  const ahora = new Date();
+  return { hora: ahora.getHours(), minuto: ahora.getMinutes() };
+}
+
+// ===== AVISOS DE HORA =====
+function avisosVistos() {
+  try {
+    return JSON.parse(localStorage.getItem(CLAVE_AVISOS) || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function marcarAvisoVisto(id) {
+  try {
+    const vistos = avisosVistos();
+    if (vistos.indexOf(id) === -1) vistos.push(id);
+    localStorage.setItem(CLAVE_AVISOS, JSON.stringify(vistos));
+  } catch (e) {}
+}
+
+let avisoAbierto = false;
+
+function revisarAvisos() {
+  if (avisoAbierto) return;
+  const ahora = horaActual();
+  const minutosAhora = ahora.hora * 60 + ahora.minuto;
+  const vistos = avisosVistos();
+
+  // Buscamos el aviso más tardío que ya toca y que no se ha visto.
+  let pendiente = null;
+  for (let i = 0; i < AVISOS.length; i++) {
+    const a = AVISOS[i];
+    const minutosAviso = a.hora * 60 + a.minuto;
+    if (minutosAhora >= minutosAviso && vistos.indexOf(a.id) === -1) {
+      pendiente = a;
+    }
+  }
+  if (!pendiente) return;
+
+  // Si ya toca el último, damos por vistos los anteriores para no apilar avisos.
+  for (let i = 0; i < AVISOS.length; i++) {
+    const a = AVISOS[i];
+    if (a.hora * 60 + a.minuto < pendiente.hora * 60 + pendiente.minuto) {
+      marcarAvisoVisto(a.id);
+    }
+  }
+  mostrarAviso(pendiente);
+}
+
+function mostrarAviso(aviso) {
+  const capa = document.getElementById("aviso");
+  const texto = document.getElementById("aviso-texto");
+  const boton = document.getElementById("btn-aviso");
+
+  avisoAbierto = true;
+  texto.textContent = aviso.texto;
+  capa.classList.toggle("urgente", !!aviso.urgente);
+  capa.classList.remove("saliendo");
+  capa.classList.remove("oculta");
+
+  boton.onclick = function () {
+    marcarAvisoVisto(aviso.id);
+    capa.classList.add("saliendo");
+    setTimeout(function () {
+      capa.classList.add("oculta");
+      avisoAbierto = false;
+    }, 500);
+  };
+}
+
+// ===== PANTALLA DE REANUDAR =====
+function mostrarReanudar(indiceGuardado, alElegir) {
+  const capa = document.getElementById("reanudar");
+  capa.classList.remove("saliendo");
+  capa.classList.remove("oculta");
+
+  function cerrar() {
+    capa.classList.add("saliendo");
+    setTimeout(function () {
+      capa.classList.add("oculta");
+    }, 500);
+  }
+
+  document.getElementById("btn-seguir").onclick = function () {
+    cerrar();
+    alElegir(indiceGuardado);
+  };
+
+  document.getElementById("btn-reiniciar").onclick = function () {
+    borrarProgreso();
+    cerrar();
+    alElegir(null);
+  };
+}
+
+// ===== PANTALLA DEL REGALO =====
+function mostrarRegalo() {
+  const capa = document.getElementById("regalo-pantalla");
+  const caja = document.getElementById("regalo-caja");
+  caja.src = "img/gift.png";
+  caja.classList.remove("abriendo");
+  capa.classList.remove("oculta");
+
+  // Después de un momento, el regalo se entreabre: algo quiere salir.
+  setTimeout(function () {
+    caja.src = "img/semiopen-gift.png";
+  }, 2500);
+
+  caja.onclick = function () {
+    caja.onclick = null;
+    caja.classList.add("abriendo");
+    setTimeout(function () {
+      capa.classList.add("oculta");
+      mostrarRasca();
+    }, 900);
+  };
+}
+
+// ===== RASCA Y GANA =====
+function mostrarRasca() {
+  const capa = document.getElementById("rasca-pantalla");
+  const canvas = document.getElementById("rasca-canvas");
+  const codigo = document.getElementById("rasca-codigo");
+  const mensaje = document.getElementById("rasca-mensaje");
+  const caja = document.getElementById("rasca-caja");
+
+  codigo.textContent = CODIGO_REGALO;
+  mensaje.classList.remove("visible");
+  capa.classList.remove("oscuro");
+  capa.style.background = "#F4EDE2";
+  capa.classList.remove("oculta");
+
+  // Ajustamos el canvas al tamaño real de la caja.
+  const ancho = caja.clientWidth;
+  const alto = caja.clientHeight;
+  const escala = window.devicePixelRatio || 1;
+  canvas.width = ancho * escala;
+  canvas.height = alto * escala;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(escala, escala);
+
+  // Capa gris que se va a raspar.
+  ctx.globalCompositeOperation = "source-over";
+  const gris = ctx.createLinearGradient(0, 0, ancho, alto);
+  gris.addColorStop(0, "#B8B8B8");
+  gris.addColorStop(0.5, "#D2D2D2");
+  gris.addColorStop(1, "#A8A8A8");
+  ctx.fillStyle = gris;
+  ctx.fillRect(0, 0, ancho, alto);
+  ctx.fillStyle = "#8E8E8E";
+  ctx.font = "16px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Raspa aquí", ancho / 2, alto / 2);
+
+  let rascando = false;
+  let terminado = false;
+  let ultimaMedicion = 0;
+
+  function raspar(evento) {
+    if (terminado) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = evento.clientX - rect.left;
+    const y = evento.clientY - rect.top;
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Medimos el avance cada cierto tiempo (es costoso hacerlo en cada movimiento).
+    const ahora = Date.now();
+    if (ahora - ultimaMedicion > 90) {
+      ultimaMedicion = ahora;
+      actualizarAvance();
+    }
+  }
+
+  function actualizarAvance() {
+    const datos = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let transparentes = 0;
+    let total = 0;
+    // Revisamos un píxel de cada 16 para que sea rápido.
+    for (let i = 3; i < datos.length; i += 64) {
+      total++;
+      if (datos[i] < 128) transparentes++;
+    }
+    const avance = transparentes / total; // de 0 a 1
+
+    // El fondo se va pintando de borgoña según lo que se ha raspado.
+    const t = Math.min(1, avance / 0.6);
+    const base = [244, 237, 226];
+    const r = Math.round(base[0] + (COLOR_BORGONA[0] - base[0]) * t);
+    const g = Math.round(base[1] + (COLOR_BORGONA[1] - base[1]) * t);
+    const b = Math.round(base[2] + (COLOR_BORGONA[2] - base[2]) * t);
+    capa.style.background = "rgb(" + r + "," + g + "," + b + ")";
+    if (t > 0.45) capa.classList.add("oscuro");
+
+    // Cuando ya se raspó casi todo, terminamos solos.
+    if (avance > 0.6) {
+      terminar();
+    }
+  }
+
+  function terminar() {
+    terminado = true;
+    capa.style.background = "rgb(" + COLOR_BORGONA.join(",") + ")";
+    capa.classList.add("oscuro");
+    // Quitamos lo que quede de gris.
+    canvas.style.transition = "opacity 600ms";
+    canvas.style.opacity = "0";
+    setTimeout(function () {
+      mensaje.classList.add("visible");
+    }, 700);
+  }
+
+  canvas.onpointerdown = function (e) {
+    rascando = true;
+    canvas.setPointerCapture(e.pointerId);
+    raspar(e);
+  };
+  canvas.onpointermove = function (e) {
+    if (rascando) raspar(e);
+  };
+  canvas.onpointerup = function () {
+    rascando = false;
+  };
+  canvas.onpointercancel = function () {
+    rascando = false;
+  };
+}
+
 // ===== DIBUJAR UNA PANTALLA =====
 // ===== CREAR UNA ILUSTRACIÓN =====
 function agregarIlustracion(ruta, posicion, animacion) {
@@ -87,6 +404,7 @@ function agregarIlustracion(ruta, posicion, animacion) {
 
 function mostrarPantalla(indice) {
   const p = pantallas[indice];
+  guardarProgreso(indice);
 
   // Texto de la pantalla
   let html = '<p class="texto-principal">' + p.texto + '</p>';
@@ -131,6 +449,11 @@ function mostrarPantalla(indice) {
   }
 
   dibujarPuntos(indice);
+
+   // Si es la pantalla del regalo, abrimos la escena especial
+  if (p.esRegalo) {
+    setTimeout(mostrarRegalo, 900);
+  }
 }
 
 // ===== PUNTITOS DE PROGRESO =====
@@ -166,9 +489,6 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js");
   });
 }
-
-// ===== ARRANQUE =====
-mostrarPantalla(actual);
 
 // ===== ESCENA DE BIENVENIDA =====
 // Texto de la pregunta. El día de la sorpresa cambias solo esta línea.
@@ -252,3 +572,30 @@ btnSi.addEventListener("click", function () {
     bienvenidaEl.classList.add("oculta");
   }, 700);
 });
+
+// ===== ARRANQUE =====
+// Siempre dibujamos la pantalla 0 por detrás (la bienvenida la tapa).
+mostrarPantalla(actual);
+
+const progresoGuardado = leerProgreso();
+
+if (progresoGuardado !== null && progresoGuardado > 0) {
+  // Ya había avanzado: quitamos la bienvenida y preguntamos.
+  bienvenidaEl.classList.add("oculta");
+  clearInterval(intervaloPasos);
+
+  mostrarReanudar(progresoGuardado, function (indice) {
+    if (indice === null) {
+      // Empezar de nuevo: recargamos para que corra la bienvenida completa.
+      window.location.reload();
+    } else {
+      actual = indice;
+      mostrarPantalla(actual);
+      revisarAvisos();
+    }
+  });
+}
+
+// Revisamos la hora al abrir y luego cada 30 segundos mientras esté abierta.
+revisarAvisos();
+setInterval(revisarAvisos, 30000);
