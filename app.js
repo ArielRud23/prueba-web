@@ -25,6 +25,7 @@ const pantallas = [
     texto: "Hemos investigado un poco sobre ti y hemos descubierto que eres una persona muy especial... También sabemos que desde que tú eres pequeña, nos has acompañado durante todo este tiempo!",
     secundario:"Es momento de devolverte el favor... así que, nosotros queremos acompañarte a ti en este bonito día.",
     boton: "Siguiente →",
+    clase: "pantalla-larga",
     imagen: "img/kakashi.png",
     posicion: "abajo-izq",
     animacion: "asomar espejo",
@@ -94,6 +95,8 @@ function mostrarPantalla(indice) {
     html += '<p class="texto-secundario">' + p.secundario + '</p>';
   }
   screenEl.innerHTML = html;
+  // Clase extra opcional para ajustar una pantalla en particular
+  screenEl.className = p.clase || "";
 
   // Reiniciamos la animación de entrada del texto
   screenEl.classList.remove("entrando");
