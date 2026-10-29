@@ -533,6 +533,121 @@ bottom: 150px;
 width: 120px;
 }
 
+/* ===== PANTALLA FINAL: TRES EN FILA ===== */
+
+/* El texto sube para dejar espacio a la fila de abajo */
+#screen.pantalla-final-trio {
+  justify-content: flex-start;
+  padding-top: 40px;
+}
+
+#screen.pantalla-final-trio .texto-principal {
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+/* Pikachu dormido, derecha (donde ya estaba) */
+.ilustracion.trio-der {
+  right: 0;
+  bottom: 110px;
+  width: 100px;
+}
+
+/* Choco acostado, izquierda, volteado hacia el centro */
+.ilustracion.trio-izq {
+  left: 0;
+  bottom: 120px;
+  width: 120px;
+}
+
+/* Ariel y Karina, centro, a la misma altura */
+.ilustracion.trio-centro {
+  left: 50%;
+  bottom: 120px;
+  width: 200px;
+  margin-left: -100px;
+}
+
+/* Respirar conservando el volteo de espejo */
+.ilustracion.respirar.espejo {
+  animation: entrar-suave 700ms ease 300ms both,
+             respirar-espejo 4000ms ease-in-out 1000ms infinite;
+}
+
+@keyframes respirar-espejo {
+  0%, 100% { transform: scaleX(-1) translateY(0) scale(1); }
+  50%      { transform: scaleX(-1) translateY(-4px) scale(1.02); }
+}
+
+/* ===== PANTALLA DE CHOCO ===== */
+
+/* El texto sube para dejar espacio a las dos imágenes */
+#screen.pantalla-choco {
+  justify-content: flex-start;
+  padding-top: 70px;
+}
+
+/* Choco, abajo a la izquierda */
+.ilustracion.choco-izq {
+  left: 16px;
+  bottom: 100px;
+  width: 100px;
+}
+
+/* Naruto, abajo a la derecha, más alto que Choco */
+.ilustracion.naruto-der {
+  right: 16px;
+  bottom: 120px;
+  width: 150px;
+}
+
+/* ===== PANTALLA "COMPAÑÍA": secuencia ===== */
+
+/* El texto va hasta arriba y se quita la línea separadora */
+#screen.pantalla-compania {
+  justify-content: flex-start;
+  padding-top: 30px;
+}
+
+#screen.pantalla-compania .separador {
+  display: none;
+}
+
+/* Pikachu se desvanece sin moverse de su lugar */
+.ilustracion.sobre-boton.desvaneciendo {
+  animation: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+/* Todos los personajes, en el centro de la pantalla */
+.ilustracion.todos-centro {
+  left: 50%;
+  top: 150px;
+  width: 320px;
+  margin-left: -160px;
+  animation: aparecer-suave 900ms ease both;
+}
+
+/* Ariel y Karina, abajo, mirando hacia arriba, preocupados */
+.ilustracion.pareja-abajo {
+  left: 50%;
+  bottom: 95px;
+  width: 190px;
+  margin-left: -95px;
+  animation: subir-pareja 900ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes aparecer-suave {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes subir-pareja {
+  from { opacity: 0; transform: translateY(70px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ===================================================== */
 /* ===== CAPAS NUEVAS: reanudar, aviso, regalo, rasca ===== */
 /* ===================================================== */
@@ -640,7 +755,7 @@ width: 120px;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 90px 24px 60px;
+  padding: 90px 24px 90px;
   text-align: center;
   animation: capa-entra 700ms ease both;
 }
@@ -662,9 +777,9 @@ width: 120px;
 #regalo-grupo {
   position: absolute;
   left: 50%;
-  bottom: 0;
-  width: 300px;
-  margin-left: -150px;
+  bottom: 40px;
+  width: 330px;
+  margin-left: -165px;
   height: auto;
 }
 
@@ -672,9 +787,9 @@ width: 120px;
 #regalo-caja {
   position: absolute;
   left: 50%;
-  bottom: -10px;
-  width: 110px;
-  margin-left: -55px;
+  bottom: -30px;
+  width: 80px;
+  margin-left: -40px;
   height: auto;
   cursor: pointer;
   pointer-events: auto;

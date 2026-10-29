@@ -23,7 +23,7 @@ const pantallas = [
   },
   {
     texto: "Hemos investigado un poco sobre ti y hemos descubierto que eres una persona muy especial... También sabemos que desde que tú eres pequeña, nos has acompañado durante todo este tiempo!",
-    secundario:"Es momento de devolverte el favor... así que, nosotros queremos acompañarte a ti en este bonito día.",
+    secundario: "Es momento de devolverte el favor... así que, nosotros queremos acompañarte a ti en este bonito día.",
     boton: "Siguiente →",
     clase: "pantalla-larga",
     imagen: "img/kakashi.png",
@@ -47,27 +47,41 @@ const pantallas = [
     animacion2: "asomar"
   },
   {
-    texto: "Y hay una forma muy particular de decirle a alguien que es importante: dedicarle algo que no existía antes.",
-    boton: "Siguiente →"
+    texto: "Espero que en una próxima vez, él nos acompañe en forma de peluchito, así como nosotros nos volvimos realidad y permaneceremos siempre contigo... Te encontraremos, Choco!",
+    boton: "Siguiente →",
+    clase: "pantalla-choco",
+    imagen: "img/choco.png",
+    posicion: "choco-izq",
+    animacion: "asomar",
+    imagen2: "img/naruto-pokeball.png",
+    posicion2: "naruto-der",
+    animacion2: "asomar"
   },
   {
-    texto: "¿Sabes qué tienen en común todas estas palabras?",
+    texto: "Y bueno, mi amor... pero antes de que todo esto termine, quiero que caminemos un poco, por que nos queda un último detalle que quiero que descubras, iremos los dos... o bueno, tenemos algo de compañia...",
     boton: "Quiero saber →",
+    clase: "pantalla-final-trio",
     imagen: "img/pika-sleep.png",
-    posicion: "abajo-der",
-    animacion: "respirar"
+    posicion: "trio-der",
+    animacion: "respirar",
+    imagen2: "img/choco-acostado.png",
+    posicion2: "trio-izq",
+    animacion2: "respirar espejo",
+    imagen3: "img/ariel-karina.png",
+    posicion3: "trio-centro",
+    animacion3: "asomar"
   },
   {
-    texto: "Esta es la última pantalla de la prueba.",
-    secundario: "Pronto habrá más.",
-    boton: "Volver al inicio",
+    texto: "Parece que si tenemos compañía...",
+    boton: "Siguiente →",
+    clase: "pantalla-compania",
     imagen: "img/pika-hearth.png",
     posicion: "sobre-boton",
     animacion: "asomar-centro",
+    secuencia: "compania"
   },
-   {
+  {
     texto: "Última misión.",
-    secundario: "Algo te espera.",
     boton: "Continuar →",
     esRegalo: true
   }
@@ -83,6 +97,8 @@ const appEl = document.getElementById("app");
 
 // ===== ESTADO =====
 let actual = 0;
+let temporizadorRegalo = null;
+let temporizadoresSecuencia = [];
 
 // =====================================================
 // ===== CONFIGURACIÓN FÁCIL (aquí cambias lo importante) =====
@@ -92,7 +108,7 @@ let actual = 0;
 const PANTALLA_MINISO = 2;
 
 // Código que se descubre al raspar. El día de la sorpresa ponlo aquí.
-const CODIGO_REGALO = "XXXX";
+const CODIGO_REGALO = "486C6F0A";
 
 // Color borgoña del iPhone (vino chocolate).
 const COLOR_BORGONA = [90, 31, 43];
@@ -327,7 +343,7 @@ function mostrarRasca() {
     const y = evento.clientY - rect.top;
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 22, 0, Math.PI * 2);
+    ctx.arc(x, y, 11, 0, Math.PI * 2);
     ctx.fill();
 
     // Medimos el avance cada cierto tiempo (es costoso hacerlo en cada movimiento).
@@ -350,7 +366,7 @@ function mostrarRasca() {
     const avance = transparentes / total; // de 0 a 1
 
     // El fondo se va pintando de borgoña según lo que se ha raspado.
-    const t = Math.min(1, avance / 0.6);
+    const t = Math.min(1, avance / 0.85);
     const base = [244, 237, 226];
     const r = Math.round(base[0] + (COLOR_BORGONA[0] - base[0]) * t);
     const g = Math.round(base[1] + (COLOR_BORGONA[1] - base[1]) * t);
@@ -359,7 +375,7 @@ function mostrarRasca() {
     if (t > 0.45) capa.classList.add("oscuro");
 
     // Cuando ya se raspó casi todo, terminamos solos.
-    if (avance > 0.6) {
+    if (avance > 0.85) {
       terminar();
     }
   }
@@ -402,6 +418,45 @@ function agregarIlustracion(ruta, posicion, animacion) {
   appEl.appendChild(img);
 }
 
+// ===== SECUENCIA AUTOMÁTICA DE LA PANTALLA "COMPAÑÍA" =====
+// Tiempos en milisegundos desde que entra la pantalla. Cámbialos aquí.
+const TIEMPO_PIKA_SALE = 3500;      // Pikachu empieza a desvanecerse
+const TIEMPO_TODOS_ENTRAN = 4300;   // entra la imagen de todos los personajes
+const TIEMPO_PAREJA_ENTRA = 8000;   // entran Ariel y Karina desde abajo
+
+function limpiarSecuencia() {
+  temporizadoresSecuencia.forEach(function (t) {
+    clearTimeout(t);
+  });
+  temporizadoresSecuencia = [];
+}
+
+function iniciarSecuenciaCompania() {
+  // 1. Pikachu se desvanece
+  temporizadoresSecuencia.push(setTimeout(function () {
+    const pika = document.querySelector(".ilustracion.sobre-boton");
+    if (pika) pika.classList.add("desvaneciendo");
+  }, TIEMPO_PIKA_SALE));
+
+  // 2. Entran todos los personajes, en el centro
+  temporizadoresSecuencia.push(setTimeout(function () {
+    const todos = document.createElement("img");
+    todos.src = "img/all-anime.png";
+    todos.alt = "";
+    todos.className = "ilustracion todos-centro";
+    appEl.appendChild(todos);
+  }, TIEMPO_TODOS_ENTRAN));
+
+  // 3. Entran Ariel y Karina desde abajo, preocupados
+  temporizadoresSecuencia.push(setTimeout(function () {
+    const pareja = document.createElement("img");
+    pareja.src = "img/ariel-karina-preocupados.png";
+    pareja.alt = "";
+    pareja.className = "ilustracion pareja-abajo";
+    appEl.appendChild(pareja);
+  }, TIEMPO_PAREJA_ENTRA));
+}
+
 function mostrarPantalla(indice) {
   const p = pantallas[indice];
   guardarProgreso(indice);
@@ -425,6 +480,9 @@ function mostrarPantalla(indice) {
   document.querySelectorAll(".ilustracion").forEach(function (el) {
     el.remove();
   });
+
+// Cancelamos cualquier secuencia anterior
+  limpiarSecuencia();
 
   if (p.imagen) {
     agregarIlustracion(p.imagen, p.posicion, p.animacion);
@@ -451,8 +509,20 @@ function mostrarPantalla(indice) {
   dibujarPuntos(indice);
 
    // Si es la pantalla del regalo, abrimos la escena especial
+   // Limpiamos cualquier cuenta regresiva anterior del regalo
+  if (temporizadorRegalo) {
+    clearTimeout(temporizadorRegalo);
+    temporizadorRegalo = null;
+  }
+
+  // Si es la pantalla del regalo, damos 4 segundos para leerla.
+  // Si Karina toca el botón antes, el regalo se abre en ese momento.
   if (p.esRegalo) {
-    setTimeout(mostrarRegalo, 900);
+    temporizadorRegalo = setTimeout(mostrarRegalo, 4000);
+  }
+   // Si la pantalla tiene secuencia automática, la iniciamos
+  if (p.secuencia === "compania") {
+    iniciarSecuenciaCompania();
   }
 }
 
@@ -468,6 +538,16 @@ function dibujarPuntos(indice) {
 
 // ===== BOTONES =====
 btnNext.addEventListener("click", function () {
+  // En la pantalla del regalo, Continuar abre la escena al instante
+  if (pantallas[actual].esRegalo) {
+    if (temporizadorRegalo) {
+      clearTimeout(temporizadorRegalo);
+      temporizadorRegalo = null;
+    }
+    mostrarRegalo();
+    return;
+  }
+
   if (actual < pantallas.length - 1) {
     actual++;
   } else {
