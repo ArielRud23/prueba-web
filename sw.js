@@ -1,7 +1,7 @@
 // ===== VERSIÓN DE LA MEMORIA =====
 // Cada vez que cambies cualquier archivo de la app, sube este número
 // (v1, v2, v3...) para que el iPhone descargue la versión nueva.
-const VERSION = "v26";
+const VERSION = "v27";
 const NOMBRE_CACHE = "amor-" + VERSION;
 
 // ===== ARCHIVOS QUE SE GUARDAN EN EL TELÉFONO =====
@@ -36,6 +36,13 @@ const ARCHIVOS = [
   "./img/choco-acostado.png",
   "./img/all-anime.png",
   "./img/ariel-karina-preocupados.png",
+  "./img/naruto-walk.png",
+  "./img/naruto-walk-head.png",
+  "./img/naruto-walk-swap.png",
+  "./img/naruto-finger.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png",
 ];
 
 // ===== INSTALACIÓN =====

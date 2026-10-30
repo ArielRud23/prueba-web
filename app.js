@@ -164,7 +164,7 @@ function borrarProgreso() {
 
 // ===== HORA ACTUAL (con modo de prueba) =====
 // Para ensayar sin esperar, abre la app con ?hora=20:25 al final de la dirección.
-// Ejemplo: arielrud23.github.io/prueba-web/?hora=20:25
+// Ejemplo: arielrud23.github.io/Amor/?hora=20:25
 function horaActual() {
   const params = new URLSearchParams(window.location.search);
   const simulada = params.get("hora");
