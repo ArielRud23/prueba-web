@@ -111,7 +111,7 @@ const PANTALLA_MINISO = 2;
 const CODIGO_REGALO = "486C6F0A";
 
 // Color borgoña del iPhone (vino chocolate).
-const COLOR_BORGONA = [90, 31, 43];
+const COLOR_BORGONA = [86, 40, 38];
 
 // Avisos de hora. Formato 24 horas: 20 y 20 son las 8:20 p. m.
 // Cada aviso sale una sola vez.
@@ -295,6 +295,98 @@ function mostrarRegalo() {
   };
 }
 
+// ===== MENSAJE DEL RASPADO QUE SE ESCRIBE =====
+// Escribe un texto que contiene saltos de línea (<br>) sin perderlos.
+let temporizadorMensajeRasca = null;
+let mensajeRascaCompleto = null;
+
+function cancelarMensajeRasca() {
+  if (temporizadorMensajeRasca) {
+    clearTimeout(temporizadorMensajeRasca);
+    temporizadorMensajeRasca = null;
+  }
+}
+
+function escribirMensajeRasca(elemento) {
+  cancelarMensajeRasca();
+
+  // Guardamos el HTML original, con sus <br>, y lo partimos en letras
+  // y saltos de línea. Cada <br> cuenta como una sola pieza.
+  const original = elemento.innerHTML;
+  mensajeRascaCompleto = original;
+  const piezas = original.split(/(<br\s*\/?>)/i).reduce(function (lista, trozo) {
+    if (/^<br\s*\/?>$/i.test(trozo)) {
+      lista.push({ salto: true });
+    } else {
+      trozo.split("").forEach(function (letra) {
+        lista.push({ letra: letra });
+      });
+    }
+    return lista;
+  }, []);
+
+  // El texto entero queda reservado pero invisible, para que no salte.
+  elemento.innerHTML =
+    '<span class="escrito"></span><span class="por-escribir">' +
+    original + '</span>';
+  const escrito = elemento.querySelector(".escrito");
+  const pendiente = elemento.querySelector(".por-escribir");
+
+  let n = 0;
+  let htmlEscrito = "";
+
+  function siguiente() {
+    if (n >= piezas.length) {
+      elemento.innerHTML = original;
+      temporizadorMensajeRasca = null;
+      return;
+    }
+
+    const pieza = piezas[n];
+    n++;
+
+    let espera = VELOCIDAD_ESCRITURA;
+    if (pieza.salto) {
+      htmlEscrito += "<br>";
+      espera = 420;
+    } else {
+      htmlEscrito += pieza.letra;
+      const anterior = n >= 2 && piezas[n - 2].letra;
+      const proxima = n < piezas.length && piezas[n].letra;
+      if (pieza.letra === "." && anterior === ".") {
+        espera = PAUSA_PUNTOS_SUSP;
+      } else if (
+        (pieza.letra === "." || pieza.letra === "!" || pieza.letra === "?") &&
+        proxima !== "."
+      ) {
+        espera = PAUSA_PUNTO;
+      } else if (pieza.letra === "," || pieza.letra === ";") {
+        espera = PAUSA_COMA;
+      }
+    }
+
+    escrito.innerHTML = htmlEscrito;
+    // Lo que falta, con los mismos saltos de línea, sigue reservando espacio.
+    pendiente.innerHTML = piezas.slice(n).map(function (p) {
+      return p.salto ? "<br>" : p.letra;
+    }).join("");
+
+    temporizadorMensajeRasca = setTimeout(siguiente, espera);
+  }
+
+  temporizadorMensajeRasca = setTimeout(siguiente, 600);
+}
+
+// Tocar el mensaje lo completa al instante.
+function completarMensajeRasca() {
+  if (!temporizadorMensajeRasca) return;
+  cancelarMensajeRasca();
+  const mensaje = document.getElementById("rasca-mensaje");
+  if (mensaje && mensajeRascaCompleto) {
+    mensaje.innerHTML = mensajeRascaCompleto;
+  }
+}
+
 // ===== RASCA Y GANA =====
 function mostrarRasca() {
   const capa = document.getElementById("rasca-pantalla");
@@ -303,8 +395,15 @@ function mostrarRasca() {
   const mensaje = document.getElementById("rasca-mensaje");
   const caja = document.getElementById("rasca-caja");
 
-  codigo.textContent = CODIGO_REGALO;
+   codigo.textContent = CODIGO_REGALO;
   mensaje.classList.remove("visible");
+
+  // Si ya se había escrito antes (por ejemplo, al volver a abrir), restauramos
+  // el texto original para poder escribirlo de nuevo.
+  cancelarMensajeRasca();
+  if (mensajeRascaCompleto) {
+    mensaje.innerHTML = mensajeRascaCompleto;
+  }
   capa.classList.remove("oscuro");
   capa.style.background = "#F4EDE2";
   capa.classList.remove("oculta");
@@ -389,6 +488,7 @@ function mostrarRasca() {
     canvas.style.opacity = "0";
     setTimeout(function () {
       mensaje.classList.add("visible");
+      escribirMensajeRasca(mensaje);
     }, 700);
   }
 
@@ -404,6 +504,7 @@ function mostrarRasca() {
     rascando = false;
   };
   canvas.onpointercancel = function () {
+    mensaje.onclick = completarMensajeRasca;
     rascando = false;
   };
 }
@@ -421,8 +522,8 @@ function agregarIlustracion(ruta, posicion, animacion) {
 // ===== SECUENCIA AUTOMÁTICA DE LA PANTALLA "COMPAÑÍA" =====
 // Tiempos en milisegundos desde que entra la pantalla. Cámbialos aquí.
 const TIEMPO_PIKA_SALE = 3500;      // Pikachu empieza a desvanecerse
-const TIEMPO_TODOS_ENTRAN = 4300;   // entra la imagen de todos los personajes
-const TIEMPO_PAREJA_ENTRA = 8000;   // entran Ariel y Karina desde abajo
+const TIEMPO_TODOS_ENTRAN = 5200;   // entran los personajes cuando Pikachu casi terminó
+const TIEMPO_PAREJA_ENTRA = 9500;   // entran Ariel y Karina
 
 function limpiarSecuencia() {
   temporizadoresSecuencia.forEach(function (t) {
@@ -457,6 +558,113 @@ function iniciarSecuenciaCompania() {
   }, TIEMPO_PAREJA_ENTRA));
 }
 
+// ===== TEXTO QUE SE ESCRIBE =====
+// Velocidad: milisegundos por letra. Más número = más lento.
+const VELOCIDAD_ESCRITURA = 45;
+
+// Pausa extra después de signos, para que se lea con ritmo natural.
+const PAUSA_PUNTO = 380;     // después de . ! ?
+const PAUSA_COMA = 160;      // después de , y ;
+const PAUSA_PUNTOS_SUSP = 520; // después de ...
+
+// Espera antes de empezar a escribir el texto de una pantalla nueva.
+const ESPERA_INICIO_TEXTO = 500;
+
+let temporizadorEscritura = null;
+let escrituraActual = null;
+
+// Cancela cualquier escritura en curso (al cambiar de pantalla).
+function cancelarEscritura() {
+  if (temporizadorEscritura) {
+    clearTimeout(temporizadorEscritura);
+    temporizadorEscritura = null;
+  }
+  escrituraActual = null;
+}
+
+// Completa al instante lo que falta por escribir.
+function completarEscritura() {
+  if (!escrituraActual) return;
+  const e = escrituraActual;
+  cancelarEscritura();
+  e.elementos.forEach(function (item) {
+    item.el.textContent = item.texto;
+  });
+  if (e.alTerminar) e.alTerminar();
+}
+
+// Escribe uno o varios párrafos, uno después del otro.
+// Cada párrafo reserva su espacio desde el inicio, para que nada salte.
+function escribirTextos(elementos, alTerminar) {
+  cancelarEscritura();
+
+  // Guardamos el texto completo y dejamos cada párrafo vacío pero con
+  // su altura reservada usando un span invisible con el texto entero.
+  const lista = elementos.map(function (el) {
+    const texto = el.textContent;
+    el.innerHTML =
+      '<span class="escrito"></span><span class="por-escribir">' +
+      texto + '</span>';
+    return {
+      el: el,
+      texto: texto,
+      escrito: el.querySelector(".escrito"),
+      pendiente: el.querySelector(".por-escribir")
+    };
+  });
+
+  escrituraActual = { elementos: lista, alTerminar: alTerminar };
+  // Para completar, usamos textContent directo sobre el elemento.
+
+  let indiceElemento = 0;
+  let indiceLetra = 0;
+
+  function siguienteLetra() {
+    if (!escrituraActual) return;
+
+    if (indiceElemento >= lista.length) {
+      const fin = escrituraActual.alTerminar;
+      escrituraActual = null;
+      temporizadorEscritura = null;
+      if (fin) fin();
+      return;
+    }
+
+    const item = lista[indiceElemento];
+    const texto = item.texto;
+
+    if (indiceLetra >= texto.length) {
+      // Terminó este párrafo: lo dejamos limpio y pasamos al siguiente.
+      item.el.textContent = texto;
+      indiceElemento++;
+      indiceLetra = 0;
+      temporizadorEscritura = setTimeout(siguienteLetra, 350);
+      return;
+    }
+
+    indiceLetra++;
+    item.escrito.textContent = texto.slice(0, indiceLetra);
+    item.pendiente.textContent = texto.slice(indiceLetra);
+
+    // Pausa según la letra que acabamos de escribir.
+    const letra = texto[indiceLetra - 1];
+    const anterior = texto[indiceLetra - 2];
+    let espera = VELOCIDAD_ESCRITURA;
+    if (letra === "." && anterior === ".") {
+      espera = PAUSA_PUNTOS_SUSP;
+    } else if (letra === "." || letra === "!" || letra === "?") {
+      const siguiente = texto[indiceLetra];
+      if (siguiente !== ".") espera = PAUSA_PUNTO;
+    } else if (letra === "," || letra === ";") {
+      espera = PAUSA_COMA;
+    }
+
+    temporizadorEscritura = setTimeout(siguienteLetra, espera);
+  }
+
+  temporizadorEscritura = setTimeout(siguienteLetra, ESPERA_INICIO_TEXTO);
+}
+
 function mostrarPantalla(indice) {
   const p = pantallas[indice];
   guardarProgreso(indice);
@@ -475,6 +683,15 @@ function mostrarPantalla(indice) {
   screenEl.classList.remove("entrando");
   void screenEl.offsetWidth;
   screenEl.classList.add("entrando");
+
+  // El texto se escribe letra por letra. El botón espera a que termine.
+  btnNext.classList.add("esperando");
+  const parrafos = Array.prototype.slice.call(
+    screenEl.querySelectorAll(".texto-principal, .texto-secundario")
+  );
+  escribirTextos(parrafos, function () {
+    btnNext.classList.remove("esperando");
+  });
 
     // Ilustraciones (si la pantalla tiene). Borramos las anteriores.
   document.querySelectorAll(".ilustracion").forEach(function (el) {
@@ -562,6 +779,20 @@ btnBack.addEventListener("click", function () {
     mostrarPantalla(actual);
   }
 });
+
+// Tocar el texto completa la escritura al instante.
+screenEl.addEventListener("click", function () {
+  completarEscritura();
+});
+
+// Si el botón se toca mientras se escribe, primero completa el texto.
+// El siguiente toque ya avanza de pantalla.
+btnNext.addEventListener("click", function (evento) {
+  if (escrituraActual) {
+    evento.stopImmediatePropagation();
+    completarEscritura();
+  }
+}, true);
 
 // ===== SERVICE WORKER =====
 if ("serviceWorker" in navigator) {

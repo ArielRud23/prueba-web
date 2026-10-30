@@ -414,7 +414,7 @@ html, body {
 /* Pikachu a la derecha, entre el texto y el botón (pantalla 2) */
 .ilustracion.medio-der {
   right: -14px;
-  bottom: 160px;
+  bottom: calc(160px + env(safe-area-inset-bottom));
   width: 150px;
 }
 
@@ -614,10 +614,19 @@ width: 120px;
 }
 
 /* Pikachu se desvanece sin moverse de su lugar */
-.ilustracion.sobre-boton.desvaneciendo {
-  animation: bajar-y-desvanecer 1000ms ease-in both;
-  opacity: 0;
-  transition: opacity 2000ms ease;
+  .ilustracion.sobre-boton.desvaneciendo {
+  animation: bajar-y-desvanecer 2200ms ease-in-out both;
+}
+
+@keyframes bajar-y-desvanecer {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(40px);
+  }
 }
 
 /* Todos los personajes, en el centro de la pantalla */
@@ -881,7 +890,7 @@ width: 120px;
   align-items: center;
   justify-content: center;
   background: #FBF6EC;
-  color: #5A1F2B;
+  color: #562826;
   font-size: 34px;
   font-weight: bold;
   letter-spacing: 6px;
@@ -897,21 +906,54 @@ width: 120px;
 }
 
 #rasca-mensaje {
-  font-size: 20px;
+ font-size: 20px;
   line-height: 1.5;
   max-width: 300px;
   color: #F4E4DA;
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 1000ms ease, transform 1000ms ease;
+  transition: opacity 500ms ease;
 }
 
 #rasca-mensaje.visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* Cuando el fondo ya es oscuro, el título se aclara */
 #rasca-pantalla.oscuro #rasca-titulo {
   color: #F4E4DA;
+}
+
+/* ===== TEXTO QUE SE ESCRIBE ===== */
+
+/* La parte que aún no se escribe reserva su espacio pero no se ve,
+   así el texto no salta ni se reacomoda mientras aparece. */
+.por-escribir {
+  visibility: hidden;
+}
+
+/* Los textos aparecen de inmediato: la escritura hace el efecto,
+   ya no el desvanecido de abajo hacia arriba. */
+.entrando > .texto-principal,
+.entrando > .texto-secundario {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+/* La línea separadora sí entra suave, un poco después */
+.entrando > .separador {
+  animation-delay: 500ms;
+}
+
+/* El botón se ve un poco atenuado mientras se escribe,
+   pero sigue funcionando (un toque completa el texto). */
+#btn-next.esperando {
+  opacity: 0.55;
+  transition: opacity 400ms ease;
+}
+
+#btn-next {
+  transition: transform var(--duracion-boton),
+              background var(--duracion-boton),
+              opacity 400ms ease;
 }
